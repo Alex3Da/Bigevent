@@ -3,17 +3,19 @@ $(function () {
     layer = layui.layer
     form = layui.form
 
+    // 富文本编辑器
+    let quill = null
+
+    // 初始化分类
     initCate()
-
-
     function initCate() {
         $.ajax({
             methid:'GET',
-            url:'/my/article/cates',
+            url:'/my/cate/list',
             success:function (res) {
-                if(res.status!==0) return layer.mes(res.message)
+                if(res.code!==0) return layer.mes(res.message)
                 // 下拉模板引擎
-                var html_str = template('tpl_cate',res)
+                let html_str = template('tpl_cate',res)
                 $('[name=cate_id]').html(html_str)
                 form.render()
             }
@@ -23,13 +25,27 @@ $(function () {
 
 
     // 初始化富文本编辑器
+    function initEditor() {
+        // 创建富文本编辑器
+        quill = new Quill('#editor', {
+            // 指定主题
+            theme: 'snow',
+            // 指定模块
+            modules: {
+                toolbar: '#toolbar'
+            }
+        })
+        // 隐藏编辑器中的下拉菜单
+        $('.my-editor select').css('display', 'none')
+    }
+
     initEditor()
 
     // 1. 初始化图片裁剪器
-    var $image = $('#image')
+    let $image = $('#image')
 
     // 2. 裁剪选项
-    var options = {
+    let options = {
         aspectRatio: 400 / 280,
         preview: '.img-preview'
     }
@@ -46,10 +62,10 @@ $(function () {
 
     // 监听选择图片
     $('#coverFile').on('change',function (e) {
-        var files = e.target.files
+        let files = e.target.files
         if(files.length===0) return layer.msg('请选择文件')
 
-        var newImgURL = URL.createObjectURL(files[0])
+        let newImgURL = URL.createObjectURL(files[0])
         $image
             .cropper('destroy')      // 销毁旧的裁剪区域
             .attr('src', newImgURL)  // 重新设置图片路径
@@ -57,8 +73,8 @@ $(function () {
 
     })
 
-    var art_state = '已发布'
 
+    let art_state = '已发布'
     // 为存为草稿绑定按钮
     $('#btnSave2').on('click',function () {
         art_state = '草稿'
@@ -67,8 +83,7 @@ $(function () {
     // 为表单绑定提交事件
     $('#form_pub').on('submit',function (e) {
         e.preventDefault()
-        var fd = new FormData($(this)[0])
-        fd.append('state',art_state)
+        let fd = new FormData($(this)[0])
 
         $image
             .cropper('getCroppedCanvas', { // 创建一个 Canvas 画布
@@ -79,6 +94,8 @@ $(function () {
                 // 将 Canvas 画布上的内容，转化为文件对象
                 // 得到文件对象后，进行后续的操作
                 fd.append('cover_img',blob)
+                fd.append('state',art_state)
+                fd.append('content', quill.root.innerHTML)
                 publishArticle(fd)
             })
 
@@ -96,7 +113,7 @@ $(function () {
             contentType:false,
             processData:false,
             success:function (res) {
-                if(res.status!==0) return layer.msg(res.message);
+                if(res.code!==0) return layer.msg(res.message);
                 layer.msg(res.message, {
                     time: 2000 //2秒关闭（如果不配置，默认是3秒）
                 }, function(){

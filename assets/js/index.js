@@ -20,8 +20,7 @@ function getUserInfo() {
         method: 'GET',
         url: '/my/userinfo',
         success: function (res) {
-            if(res.status!==0) return layui.layer.msg('获取信息失败')
-
+            if(res.code!==0) return layui.layer.msg('获取信息失败')
             renderAvator(res.data)
         },
 

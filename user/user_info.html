@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <title>基本资料</title>
     <link rel="stylesheet" href="../assets/lib/layui/css/layui.css">
+    <link rel="stylesheet" href="../assets/css/base.css">
     <link rel="stylesheet" href="../assets/css/user/user_info.css">
 </head>
 <body>
 <div class="layui-card">
     <div class="layui-card-header">修改用户信息</div>
     <div class="layui-card-body">
-        <form class="layui-form" lay-filter="formUserInfo"> <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
+        <form class="layui-form" lay-filter="formUserInfo">
+            <!-- 提示：如果你不想用form，你可以换成div等任何一个普通元素 -->
             <input type="hidden" name="id" value="">
             <div class="layui-form-item">
                 <label class="layui-form-label">登录名称</label>
                 <div class="layui-input-block">
-                    <input type="text" name="username" placeholder="请输入" autocomplete="off" class="layui-input" readonly>
+                    <input type="text" name="username" disabled placeholder="请输入" autocomplete="off" class="layui-input" readonly>
                 </div>
             </div>
 

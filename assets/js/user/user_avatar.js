@@ -1,9 +1,9 @@
 $(function () {
 
-    var layer = layui.layer
+    let layer = layui.layer
 
     // 1.1 获取裁剪区域的 DOM 元素
-    var $image = $('#image')
+    let $image = $('#image')
     // 1.2 配置选项
     const options = {
         // 纵横比
@@ -16,25 +16,22 @@ $(function () {
     $image.cropper(options)
 
 
-
     // 绑定上传按钮
-    $('#btnChooseImage').on('click',function () {
+    $('#btnChooseImage').on('click', function () {
         $('#file').click()
     })
 
     // 为文件选择绑定change事件
-    $('#file').on('change',function (e) {
-        var fileList = e.target.files
-        if(fileList.length===0) return layer.msg('请选择图片')
+    $('#file').on('change', function (e) {
+        let fileList = e.target.files
+        if (fileList.length === 0) return layer.msg('请选择图片')
 
 
         //拿到用户的选择的图片
-        var file = e.target.files[0]
-        console.log(file)
+        let file = e.target.files[0]
 
         // 将文件转化为路径
-        var imgURL = URL.createObjectURL(file)
-        console.log(imgURL)
+        let imgURL = URL.createObjectURL(file)
 
         // 初始化裁剪区域
         $image
@@ -46,8 +43,8 @@ $(function () {
 
 
     // 更新头像
-    $('#btnUpload').on('click',function () {
-        var dataURL = $image
+    $('#btnUpload').on('click', function () {
+        let dataURL = $image
             .cropper('getCroppedCanvas', {
                 // 创建一个 Canvas 画布
                 width: 100,
@@ -56,17 +53,16 @@ $(function () {
             .toDataURL('image/png')
         // 将 Canvas 画布上的内容，转化为 base64 格式的字符串
 
-        // console.log(dataURL)
 
         $.ajax({
-            method:'POST',
-            url:'/my/update/avatar',
-            data:{
-                avatar:dataURL
+            method: 'PATCH',
+            url: '/my/update/avatar',
+            data: {
+                avatar: dataURL
             },
-            success:function (res) {
-                if(res.status!==0) return layer.msg('更新头像失败')
-                layer.msg('更新头像成功')
+            success: function (res) {
+                if (res.code !== 0) return layer.msg(res.message)
+                layer.msg(res.message)
                 window.parent.getUserInfo()
             }
 
