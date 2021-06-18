@@ -43,9 +43,10 @@ $(function () {
         let username = $('#form_res input[name=username]').val()
         let password = $('#form_res input[name=password]').val()
         data = {username: username, password: password}
-        $.post('/api/reg', data, function (res) {
+        $.post('/api/regUser', data, function (res) {
             if (res.code !== 0) return layer.msg(res.message)
             layer.msg(res.message)
+            console.log('yes')
             $('#res_link').click()
 
         })
@@ -59,6 +60,7 @@ $(function () {
             method: 'POST',
             data: $(this).serialize(),
             success: function (res) {
+                console.log(res)
                 if (res.code !== 0) return layer.msg(res.message, {time: 2000})
                 layer.msg(res.message, {
                     time: 2000 //2秒关闭（如果不配置，默认是3秒）

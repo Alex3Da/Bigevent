@@ -46,7 +46,6 @@ $(function () {
                 let html_str = template('tpl_table', res)
                 //使用模板引擎渲染数据
                 $('tbody').html(html_str)
-
                 // 渲染分页
                 renderPage(res.total)
             }
@@ -59,7 +58,7 @@ $(function () {
     function initCate() {
         $.ajax({
             method: 'GET',
-            url: '/my/cate/list',
+            url: '/my/article/cates',
             success: function (res) {
                 if (res.code !== 0) return layer.msg(res.message)
                 let html_str = template('tpl_cate', res)
@@ -130,7 +129,7 @@ $(function () {
             //do something
             $.ajax({
                 method: 'DELETE',
-                url: '/my/article/info?id=' + id,
+                url: '/my/article/delete/' + id,
                 success: function (res) {
                     if (res.code !== 0) return layer.msg(res.message)
                     layer.msg(res.message)

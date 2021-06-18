@@ -9,12 +9,12 @@ $(function () {
             , '密码必须6到12位，且不能出现空格'
         ],
         semePwd: function (value) {
-            if (value === $('input[name=old_pwd]').val()) {
+            if (value === $('input[name=oldPwd]').val()) {
                 return '新旧密码不能相同'
             }
         },
         rePwd: function (value) {
-            if (value !== $('input[name=new_pwd]').val()) {
+            if (value !== $('input[name=newPwd]').val()) {
                 return '两次密码不一致'
             }
         }

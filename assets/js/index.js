@@ -34,8 +34,8 @@ function renderAvator(user) {
     var name = user.nickname || user.username
     $('#welcome').html('欢迎&nbsp;&nbsp;'+name)
 
-    if(user.user_pic!==null){
-        $('.layui-nav-img').attr('src',user.user_pic).show()
+    if(user.avatar!==null){
+        $('.layui-nav-img').attr('src',user.avatar).show()
         $('.text-avator').hide()
     }else{
         $('.layui-nav-img').hide()

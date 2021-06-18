@@ -8,7 +8,7 @@ $(function () {
     function initArtCateList() {
         $.ajax({
             method: 'GET',
-            url: '/my/cate/list',
+            url: '/my/article/cates',
             success: function (res) {
                 let html_str = template('tpl_cate', res)
                 $('tbody').html(html_str)
@@ -35,7 +35,7 @@ $(function () {
         e.preventDefault()
         $.ajax({
             method: 'POST',
-            url: '/my/cate/add',
+            url: '/my/article/addcates',
             data: $(this).serialize(),
             success: function (res) {
                 if (res.code !== 0) return layer.msg(res.message)
@@ -61,7 +61,7 @@ $(function () {
         let id = $(this).attr('data-id')
         $.ajax({
             method: 'GET',
-            url: '/my/cate/info?id=' + id,
+            url: '/my/article/cates/' + id,
             success: function (res) {
                 form.val('form_edit', res.data)
             }
@@ -76,7 +76,7 @@ $(function () {
         $.ajax({
             method: 'PUT',
             data: $(this).serialize(),
-            url: '/my/cate/info',
+            url: '/my/article/updatecate',
             success: function (res) {
                 if (res.code !== 0) return layer.msg(res.message)
                 layer.msg(res.message, {
@@ -98,7 +98,7 @@ $(function () {
         layer.confirm('确定删除吗?', {icon: 3, title: '提示'}, function (index) {
             $.ajax({
                 method: 'DELETE',
-                url: '/my/cate/del?id=' + id,
+                url: '/my/article/deletecate/'+id,
                 success: function (res) {
                     if (res.code !== 0) return layer.msg(res.message)
                     layer.msg(res.message)

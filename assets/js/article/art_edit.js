@@ -1,5 +1,8 @@
 $(function () {
 
+    // 获取上传文件的名字
+    var file_name = 'default.jpg'
+
     let layer = layui.layer
     let form = layui.form
 
@@ -48,8 +51,7 @@ $(function () {
     // 初始化分类列表
     function initArtCate() {
         const id = getQueryVariable('id')
-        console.log(id)
-        $.get('/my/cate/list', function (res) {
+        $.get('/my/article/cates', function (res) {
             // 渲染模板结构
             const htmlStr = template('tpl_cate', res)
             $('[name="cate_id"]').html(htmlStr)
@@ -83,13 +85,11 @@ $(function () {
         const id = getQueryVariable('id')
 
         // 请求文章的信息对象
-        $.get('/my/article/info?id=' + id, {}, function (res) {
-            console.log(res)
+        $.get('/my/article/' + id, {}, function (res) {
             layui.form.val('formEditInfo', res.data)
-            console.log(res.data)
             // 初始化富文本编辑器
             initEditor(res.data.content)
-            initCropper('http://www.liulongbin.top:3008' + res.data.cover_img)
+            initCropper('http://127.0.0.1:3007' + res.data.cover_img)
         })
     }
 
@@ -152,6 +152,9 @@ $(function () {
         let files = e.target.files
         if (files.length === 0) return layer.msg('请选择文件')
 
+
+        file_name = files[0].name
+
         let newImgURL = URL.createObjectURL(files[0])
         $image
             .cropper('destroy')      // 销毁旧的裁剪区域
@@ -174,13 +177,13 @@ $(function () {
             .toBlob(function (blob) {
                 // 将 Canvas 画布上的内容，转化为文件对象
                 // 得到文件对象后，进行后续的操作
-                fd.append('cover_img', blob)
+                fd.append('cover_img',blob,file_name)
                 fd.append('content', quill.root.innerHTML)
                 // 获取富文本的内容
                 fd.append('art_cate', state)
-                fd.forEach(function (v, k) {
-                    console.log(v, k)
-                })
+                // fd.forEach(function (v, k) {
+                //     console.log(v, k)
+                // })
                 publishArticle(fd)
             })
 
@@ -192,7 +195,7 @@ $(function () {
 
         $.ajax({
             method: 'PUT',
-            url: '/my/article/info',
+            url: '/my/article/edit',
             data: fd,
             // 如果是向服务器提交formData 数据要设置这两个
             contentType: false,

@@ -1,5 +1,8 @@
 $(function () {
 
+    // 获取上传文件的名字
+    var file_name = 'default.jpg'
+
     layer = layui.layer
     form = layui.form
 
@@ -11,7 +14,7 @@ $(function () {
     function initCate() {
         $.ajax({
             methid:'GET',
-            url:'/my/cate/list',
+            url:'/my/article/cates',
             success:function (res) {
                 if(res.code!==0) return layer.mes(res.message)
                 // 下拉模板引擎
@@ -65,6 +68,10 @@ $(function () {
         let files = e.target.files
         if(files.length===0) return layer.msg('请选择文件')
 
+
+        // 定义全局的文件名字
+        file_name = files[0].name
+
         let newImgURL = URL.createObjectURL(files[0])
         $image
             .cropper('destroy')      // 销毁旧的裁剪区域
@@ -93,7 +100,7 @@ $(function () {
             .toBlob(function(blob) {
                 // 将 Canvas 画布上的内容，转化为文件对象
                 // 得到文件对象后，进行后续的操作
-                fd.append('cover_img',blob)
+                fd.append('cover_img',blob,file_name)
                 fd.append('state',art_state)
                 fd.append('content', quill.root.innerHTML)
                 publishArticle(fd)

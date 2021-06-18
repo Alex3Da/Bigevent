@@ -2,6 +2,32 @@ $(function () {
 
     let layer = layui.layer
 
+
+    // 获取头像地址
+    $.get('/my/getAvatar', {}, function (res) {
+        initCropper(res.data[0].avatar)
+    })
+
+    // 初始化图片裁剪的插件
+    function initCropper(src) {
+
+        // 2. 裁剪选项，参考文档：https://www.cnbloglogs.com/eightFlying/p/cropper-demo.html
+        let options = {
+            aspectRatio: 400 / 280,
+            preview: '.img-preview',
+            // 限制裁剪框不能超出图片的范围 且图片填充模式为 cover 最长边填充
+            viewMode: 2,
+            // 初始化的裁剪区域大小 0 - 1 之间，1 表示裁剪框占满整个区域
+            autoCropArea: 1
+        }
+
+        // 3. 初始化裁剪区域
+        $image.cropper('destroy').attr('src', src).cropper(options)
+        $('.cover-box').css('display', 'flex')
+    }
+
+
+
     // 1.1 获取裁剪区域的 DOM 元素
     let $image = $('#image')
     // 1.2 配置选项
